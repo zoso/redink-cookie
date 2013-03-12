@@ -12,8 +12,8 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/main.css">
+        <!--<link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">-->
         <style>
             #log {
                 position: absolute;
@@ -86,17 +86,19 @@
                     }
                 ]
             }
+
             var cookie = JSON.stringify(cookieObj);
-            console.log(cookie);
+            document.cookie = cookie;
+            console.log(document.cookie);
 
             console.log("----");
 
-            var obj = JSON.parse(cookie);
+            var obj = JSON.parse(document.cookie);
             console.log(obj.data.length);
 
 
             
-
+            /*
 
             var cookieName = "TestCookie";
 
@@ -135,7 +137,8 @@
                         break;
                 }
             })
+*/
 
-        })
+        });
     </script>
 </html>
