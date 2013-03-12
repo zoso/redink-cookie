@@ -39,9 +39,11 @@
         <div id="wrapper">
             <p>Test Redink Cookie</p>
             <ul id="menu">
+                <li><a href="#" data-func="check">Check cookie</a></li>
+                <li><a href="#" data-func="create">Create cookie</a></li>
                 <li><a href="#" data-func="add">Add something to cookie</a></li>
                 <li><a href="#" data-func="remove">Remove something from cookie</a></li>
-                <li><a href="#" data-func="list">List content from cookie</a></li>
+                <li><a href="#" data-func="get_cookie">List content from cookie</a></li>
                 <li><a href="#" data-func="test">Test content from cookie</a></li>
                 <li><a href="#" data-func="delete_cookie">Delete cookie</a></li>
             </ul>
@@ -61,27 +63,75 @@
         $(document).ready(function() {
             //$.RedinkCookie(this, {});
             var l = $("#log");
+            //check if cookie exists or create new
+            //l.append("init: "+$.RedinkCookie("test", "init", {name: "The Cookie"}));
+
+            // if ($.RedinkCookie.check("The Cookie")) {
+            //     l.append("cookie is already set");
+            // } else {
+            //     l.append("cookie is not set");
+            // }
 
             //l.html($.RedinkCookie.add("hehe"));
+
+            var cookieObj = {
+                name: 'the name',
+                version: 'the version',
+                data: [
+                    {
+                        data: 1
+                    },
+                    {
+                        data: 2
+                    }
+                ]
+            }
+            var cookie = JSON.stringify(cookieObj);
+            console.log(cookie);
+
+            console.log("----");
+
+            var obj = JSON.parse(cookie);
+            console.log(obj.data.length);
+
+
+            
+
+
             var cookieName = "TestCookie";
 
             $("#menu li a").on("click", function(e) {
                 e.preventDefault();
                 switch($(this).data("func")) {
+                    case "check":
+                        if ($.RedinkCookie.check(cookieName)) {
+                            l.append("--- cookie exists ---");
+                        } else {
+                            l.append("---- cookie doesn't exists -");
+                        }
+                        break;
+                    case "create":
+                        if ($.RedinkCookie.check(cookieName)) {
+                            //l.append("--- cookie exists ---");
+                        } else {
+                            $.RedinkCookie.create({name: cookieName});
+                        }
+                        break;
                     case "add":
                         l.append("add: "+$.RedinkCookie(cookieName, "add")+"<br>");
                         break;
                     case "remove":
                         l.append("remove: "+$.RedinkCookie(cookieName, "remove")+"<br>");                  
                         break;
-                    case "list":
-                        l.append("list: "+$.RedinkCookie(cookieName, "list")+"<br>");
+                    case "get_cookie":
+                        l.append("list: "+$.RedinkCookie(cookieName, "get_cookie")+"<br>");
                         break;
                     case "test":
                         l.append("test: "+$.RedinkCookie(cookieName, "test")+"<br>");
                         break;
                     case "delete_cookie":
-                        l.append("delete_cookie"+$.RedinkCookie(cookieName, "delete_cookie")+"<br>");
+                        //l.append("delete_cookie"+$.RedinkCookie(cookieName, "delete_cookie")+"<br>");
+                        $.RedinkCookie.delete();
                         break;
                 }
             })
