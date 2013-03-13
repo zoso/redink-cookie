@@ -40,7 +40,7 @@
             <p>Test Redink Cookie</p>
             <ul id="menu">
                 <li><a href="#" data-func="check">Check cookie</a></li>
-                <li><a href="#" data-func="create">Create cookie</a></li>
+                <li><a href="#" data-func="sort">Sort array</a></li>
                 <li><a href="#" data-func="add">Add something to cookie</a></li>
                 <li><a href="#" data-func="remove">Remove something from cookie</a></li>
                 <li><a href="#" data-func="get_cookie">List content from cookie</a></li>
@@ -58,6 +58,7 @@
         <div id="log"></div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="js/jquery.redink.cookie.js?v=1"></script>
+         <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <!-- <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
@@ -68,6 +69,7 @@
     </body>
     <script>
         $(document).ready(function() {
+            
             var l = $("#log");
             var mylist = $("#thelist");
             if ($.RedinkCookie.check()) {
@@ -80,11 +82,22 @@
                     for (var prop in dataArr[i]) {
                         //console.log(prop+" > "+dataArr[i][prop]);
                     }
-                    var str = '<p>'+dataArr[i].title+' <a href="#" class="del" data-nr="'+i+'">slett</a>';
-                        str += '&nbsp;<a href="#" data-nr="'+i+'" class="up">opp</a>';
-                        str += '&nbsp;<a href="#" data-nr="'+i+'" class="down">ned</a></p>';
+                    var str = '<p class="class="ui-state-default>'+dataArr[i].title+' <a href="#" class="del" data-nr="'+i+'">slett</a>';
                     mylist.append(str);
                 }
+                
+                $("#thelist" ).sortable({
+                    start: function(e, ui) {
+                        var start = ui.item.index();
+                        ui.item.data('start_pos', start);
+                        console.log(">> "+start);
+                    },
+                    update: function(e, ui) {
+                        var moved = ui.item.index();
+                        var start = ui.item.data('start_pos');
+                        $.RedinkCookie.sortData(start, moved);
+                    }
+                });
                 $("#my").html("Min rapport("+dataArr.length+")");
 
                 $("p a.del").on("click", function() {
@@ -93,11 +106,11 @@
                 });
 
                 $("p a.up").on("click", function() {
-                    l.append("up");
+                    l.append("up "+$(this).data("nr"));
                 })
 
                 $("p a.down").on("click", function() {
-                    l.append("down");
+                    l.append("down "+$(this).data("nr"));
                 })
 
                 //extra is a wildcard property - check typeof
@@ -108,6 +121,10 @@
                 $.RedinkCookie({name:"Test Annual Rapport"});
             }
             
+            function send() {
+
+            }
+
             var cookieName = "TestCookie";
 
             $("#menu li a").on("click", function(e) {
@@ -133,8 +150,10 @@
                         break;
                     case "get_cookie":
                         //l.append("list: "+$.RedinkCookie(cookieName, "get_cookie")+"<br>");
+
                         break;
-                    case "test":
+                    case "sort":
+
                         //l.append("test: "+$.RedinkCookie(cookieName, "test")+"<br>");
                         break;
                     case "delete_cookie":
