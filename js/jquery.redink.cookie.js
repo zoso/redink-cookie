@@ -21,114 +21,158 @@
     //decodeURIComponent
     //encodeURIComponent
 
+    /*
+    var obj = JSON.parse(document.cookie);
+    //console.log(obj.data.length);
 
-    var methods = {
-        init: function(options, callback) {
-            //create cookie if not set - return true/false
-            var res;
-            if (document.cookie != null) {
-                res = "Cookie exist "+document.cookie;
-                // var o = JSON.parse(document.cookie);
-                // for (var i in o) {
-                //     console.log(i + " >  "+o[i]);
-                // }
-            } else {
-                res = "Cookie created";
-                options = $.extend({},
-                    defaultSettings, 
-                    options
-                );
+    //add some data
+    var tmpArr = obj.data;
+    tmpArr.push({
+        data: tmpArr.length+1
+    });
+    obj.data = tmpArr;
+    var c = JSON.stringify(obj);
+    console.log(c);
+    document.cookie = c;
+    */
 
-                cookieObj = {
-                    'name': options.name,
-                    'version': options.version
+    /*
+
+     var cookieObj = {
+                name: 'the Cookie name',
+                version: 'the version',
+                expire: 0, //when user close browser
+                domain: "",
+                    path: "/",
+                    secure: false,
+                    data: [
+                        {
+                            "data": 1
+                        },
+                        {
+                            "data": 2
+                        }
+                    ],
+                    extra: "hello" //extra is where you can add whatever you want
                 }
 
+                var cookie = JSON.stringify(cookieObj);
+                document.cookie = cookie;
 
+    */
+    var defaultSettings = {
+        name: "RedinkCookie",
+        version: 1,
+        expire: 0,
+        domain: "." + window.location.hostname,
+        data: [],
+        extra: ""
+    };
 
-                document.cookie = JSON.stringify(cookieObj);
+    Array.prototype.remove = function(from, to) {
+        var rest = this.slice((to || from) + 1 || this.length);
+        this.length = from < 0 ? this.length + from : from;
+        return this.push.apply(this, rest);
+    };
+
+    $.RedinkCookie = function(options) {
+        var res;
+        if ($.RedinkCookie.check()) {
+            //cookie exist
+            res = "cookie exists"
+        } else {
+            //create new cookie
+           defaultSettings = $.extend({}, defaultSettings, options);
+           document.cookie = JSON.stringify(defaultSettings);
+           res = "cookie created";
+        }
+        return res;
+    }
+
+    $.RedinkCookie.check = function() {
+        var state = false;
+        if (document.cookie.length > 0) {
+            state = true;
+        }
+        return state;
+    }
+
+    $.RedinkCookie.getData = function() {
+        var res;
+        if ($.RedinkCookie.check()) {
+            var obj = JSON.parse(document.cookie);
+            if (typeof obj.data === 'object') {
+                res = obj.data;
+            } else {
+                res = "no array";
+            }
+        } else {
+            res = "no data found";
+        }
+        return res;
+    }
+
+    $.RedinkCookie.removeData = function(nr) { //nr is the datas place in array...
+        var res;
+        if ($.RedinkCookie.check()) {
+            var obj = JSON.parse(document.cookie);
+            if (obj.hasOwnProperty("data")) {
+                for (var i = 0; i < obj.data.length; i++) {
+                    if (parseInt(nr) == i) {
+                        obj.data.splice(i,1);
+                        res = "deleted";
+                        break;
+                    }
+                }
+                document.cookie = JSON.stringify(obj);
+            } else {
+
             }
 
-            console.log("> "+options.name);
-            callback(res);
-        },
-        add: function(callback) {
-            //cookie = cookie + " > "+randomNr(1, 2002).toString();
-            //document.cookie = cookie;
-            callback("added "+text);
-        },
-        remove: function(callback) {
-            
-            callback("removed");
-        },
-        list: function(callback) {
-            
-            callback("listed");
-        },
-        sort: function(callback) {
-            
-            callback("sorted");
-        },
-        get_cookie: function(callback) {
-            var msg;
-            /*var obj = JSON.parse(document.cookie);
-            for (var i in obj) {
-                msg += "> "+i+" > "+obj[i]+"<br>";
-            }*/
-            //msg = $.parseJSON(document.cookie);
-            callback(msg);
-        },
-        delete_cookie: function(callback) {
-            
-            document.cookie = name+'="";-1; path=/';
-            callback("cookie deleted");
-        }
-    }
-
-    var defaultSettings = {
-        expire: 1,
-        name: "TestCookie",
-        version: 0.1
-    }
-
-    var cookie = "Test cookie content";
-    //document.cookie = cookie;
-
-    $.RedinkCookie = function(name, method, options) {
-        var msg;
-        if (method == "init") {
-            methods[method](options, function(m) {
-                msg = m;
-            });
-        } else if (method == "" || method == null) {
-            msg = "No method found";
         } else {
-            methods[method](function(m) {
-                msg = m;
-            });
+
         }
-        /*else if (methods[method]) {
-            methods[method](function(m) {
-                msg = m;
-            });
-        } else {
-            msg = "no method found";
-        }*/
-        
-        
-        return msg+"<br>";//"<br>"+document.cookie
+        return res;
     }
 
-    $.RedinkCookie.check = function(name) {
-        var r = false;
-        /*if (document.cookie.name == name) {
-            r = true;
-        }*/
-        /*var o = JSON.parse(document.cookie);
-        for (var i in o) {
-            console.log(i+" > "+o[i])
-        }*/
-        return r;
+    $.RedinkCookie.sortData = function(arr) {
+        
+    }
+
+    $.RedinkCookie.getExtra = function() {
+        var res;
+        if ($.RedinkCookie.check()) {
+            var obj = JSON.parse(document.cookie);
+            if (obj.hasOwnProperty("extra")) {
+                res = obj.extra;
+            } else {
+                res = "no extra found";
+            }
+        } else {
+            res = "no cookie found";
+        }
+        return res;
+    }
+
+    $.RedinkCookie.addData = function(data) {
+        var res;
+        if ($.RedinkCookie.check()) {
+            var obj = JSON.parse(document.cookie);
+            if (obj.hasOwnProperty("data")) {
+                var tmpArr = obj.data;
+                tmpArr.push(data);
+                obj.data = tmpArr;
+                document.cookie = JSON.stringify(obj);
+                res = "data added";
+                //data exist
+            } else {
+                //no data exist
+                res = "no array present";
+            }
+        } else {
+            res = "no cookie found";
+        }
+        return res;
     }
 
     $.RedinkCookie.create = function(options) {
@@ -136,9 +180,11 @@
     }
 
     $.RedinkCookie.delete = function(name) {
-        console.log("-> "+document.cookie);
+        //console.log("-> "+document.cookie);
         document.cookie = null;//'name="";-1; path=/';
+        return "cookie deleted";
     }
+
 
     /*
         usage:

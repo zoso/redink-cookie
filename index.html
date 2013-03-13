@@ -46,8 +46,15 @@
                 <li><a href="#" data-func="get_cookie">List content from cookie</a></li>
                 <li><a href="#" data-func="test">Test content from cookie</a></li>
                 <li><a href="#" data-func="delete_cookie">Delete cookie</a></li>
+                <li><div id="my"></div></li>
             </ul>
+            <div id="myList">
+                <div>My Rapport:</div>
+                
+            </div>
+            <div id="thelist">list</div>
         </div>
+        
         <div id="log"></div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="js/jquery.redink.cookie.js?v=1"></script>
@@ -61,83 +68,82 @@
     </body>
     <script>
         $(document).ready(function() {
-            //$.RedinkCookie(this, {});
             var l = $("#log");
-            //check if cookie exists or create new
-            //l.append("init: "+$.RedinkCookie("test", "init", {name: "The Cookie"}));
-
-            // if ($.RedinkCookie.check("The Cookie")) {
-            //     l.append("cookie is already set");
-            // } else {
-            //     l.append("cookie is not set");
-            // }
-
-            //l.html($.RedinkCookie.add("hehe"));
-
-            var cookieObj = {
-                name: 'the name',
-                version: 'the version',
-                data: [
-                    {
-                        data: 1
-                    },
-                    {
-                        data: 2
+            var mylist = $("#thelist");
+            if ($.RedinkCookie.check()) {
+                //cookie exist
+                console.log("cookie exist "+document.cookie);
+                var dataArr = $.RedinkCookie.getData();
+                //console.log(dataArr+" > "+typeof dataArr);
+                
+                for (var i = 0; i < dataArr.length; i++) {
+                    for (var prop in dataArr[i]) {
+                        //console.log(prop+" > "+dataArr[i][prop]);
                     }
-                ]
+                    var str = '<p>'+dataArr[i].title+' <a href="#" class="del" data-nr="'+i+'">slett</a>';
+                        str += '&nbsp;<a href="#" data-nr="'+i+'" class="up">opp</a>';
+                        str += '&nbsp;<a href="#" data-nr="'+i+'" class="down">ned</a></p>';
+                    mylist.append(str);
+                }
+                $("#my").html("Min rapport("+dataArr.length+")");
+
+                $("p a.del").on("click", function() {
+                    l.append("<br> slett: "+$(this).data("nr"));
+                    $.RedinkCookie.removeData($(this).data("nr"));
+                });
+
+                $("p a.up").on("click", function() {
+                    l.append("up");
+                })
+
+                $("p a.down").on("click", function() {
+                    l.append("down");
+                })
+
+                //extra is a wildcard property - check typeof
+                var extra = $.RedinkCookie.getExtra();
+                //console.log("ekstra > "+extra);
+            } else {
+                console.log("no cookie");
+                $.RedinkCookie({name:"Test Annual Rapport"});
             }
-
-            var cookie = JSON.stringify(cookieObj);
-            document.cookie = cookie;
-            console.log(document.cookie);
-
-            console.log("----");
-
-            var obj = JSON.parse(document.cookie);
-            console.log(obj.data.length);
-
-
             
-            /*
-
             var cookieName = "TestCookie";
 
             $("#menu li a").on("click", function(e) {
                 e.preventDefault();
                 switch($(this).data("func")) {
                     case "check":
-                        if ($.RedinkCookie.check(cookieName)) {
-                            l.append("--- cookie exists ---");
-                        } else {
-                            l.append("---- cookie doesn't exists -");
+                        l.append("<br>"+$.RedinkCookie.check());
+                        if ($.RedinkCookie.check()) {
+                            console.log(JSON.parse(document.cookie));
                         }
                         break;
                     case "create":
-                        if ($.RedinkCookie.check(cookieName)) {
-                            //l.append("--- cookie exists ---");
-                        } else {
-                            $.RedinkCookie.create({name: cookieName});
-                        }
+                        
                         break;
                     case "add":
-                        l.append("add: "+$.RedinkCookie(cookieName, "add")+"<br>");
+                        //l.append($.RedinkCookie.addData({title: "yo", url:"vg.no"}))
+                        for (var i = 0; i < 10; i++) {
+                            $.RedinkCookie.addData({title: "item"+i, url: "url"+i});
+                        }
                         break;
                     case "remove":
-                        l.append("remove: "+$.RedinkCookie(cookieName, "remove")+"<br>");                  
+                        //l.append("remove: "+$.RedinkCookie(cookieName, "remove")+"<br>");                  
                         break;
                     case "get_cookie":
-                        l.append("list: "+$.RedinkCookie(cookieName, "get_cookie")+"<br>");
+                        //l.append("list: "+$.RedinkCookie(cookieName, "get_cookie")+"<br>");
                         break;
                     case "test":
-                        l.append("test: "+$.RedinkCookie(cookieName, "test")+"<br>");
+                        //l.append("test: "+$.RedinkCookie(cookieName, "test")+"<br>");
                         break;
                     case "delete_cookie":
                         //l.append("delete_cookie"+$.RedinkCookie(cookieName, "delete_cookie")+"<br>");
-                        $.RedinkCookie.delete();
+                        l.append("<br>"+$.RedinkCookie.delete());
                         break;
                 }
             })
-*/
+
 
         });
     </script>
