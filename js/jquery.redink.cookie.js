@@ -127,7 +127,7 @@
     }
 
     $.RedinkCookie.delete = function() {
-        $.removeCookie(c_name, {});
+        $.removeCookie(c_name, {path:'/' });
         return true;
     }
 })(jQuery);
