@@ -33,6 +33,7 @@
     var defaultSettings = {
         version: 1,
         expire: 0,
+        path: "/",
         domain: "." + window.location.hostname,
         data: [],
         extra: "",
