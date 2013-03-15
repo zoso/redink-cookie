@@ -141,12 +141,17 @@
         var obj = $.cookie(c_name);
         var state = false;
         if (obj.hasOwnProperty("data")) {
-            for (var i = 0; i < obj.data.length; i++) {
+            var tmpArr = obj.data;
+
+            for (var i = 0; i < tmpArr.length; i++) {
                 if (parseInt(nr) == i) {
-                    obj.data.splice(i,1);
-                    //$.cookie(c_name, defaultSettings, options);
+                    tmpArr.splice(i,1);
+                    console.log("----> removed: "+nr);
+                    //
                 }
             }
+            defaultSettings = $.extend({}, defaultSettings, {data: tmpArr});
+            $.cookie(c_name, defaultSettings, options);
             state = true;
         }
         callback(state);
