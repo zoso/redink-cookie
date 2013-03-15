@@ -55,12 +55,14 @@
             var mylist = $("#thelist");
             //Demo:
             //Set cookie name
-            $.RedinkCookie.setCookieName("test-redink");
+            $.RedinkCookie.setCookieName("testredink");
 
             //check if cookie exists
             var c = $.RedinkCookie.check();
+            console.log("index: "+c);
             if (c == undefined) {
                 //no cookie -> set new cookie
+                console.log("NO COOKIE");
                 $.RedinkCookie({});
                 $("#my").html("Min rapport(0)");
             } else {
@@ -76,7 +78,7 @@
                         break;
                     case "add":
                         for (var i = 0; i < 10; i++) {
-                            $.RedinkCookie.addData({title: "item"+i, url: "url"+i}, function(s) {
+                            $.RedinkCookie.addData({title: "item"+i}, function(s) {
                                 if (s) {
                                     console.log("Well done! data added");
                                 } else {
@@ -86,7 +88,11 @@
                         }
                         break;
                     case "delete_cookie":
-                        $.RedinkCookie.delete();
+                        $.RedinkCookie.delete(function(s) {
+                            if (s) {
+                                console.log("cookie deleted");
+                            }
+                        });
                         break;
                     case "get_data":
                         $.RedinkCookie.getData();
@@ -96,10 +102,11 @@
             
             function createList() {
                 if ($("#thelist").children().length > 0) {
-                    console.log("wefwefw");
+                    console.log("remove children");
                     $("#thelist").html('');
                 }
                 var dataArr = $.RedinkCookie.getData();
+                console.log("index data: "+dataArr);
                 //loop through data array
                 for (var i = 0; i < dataArr.length; i++) {
                     //Demo: create list of items in data array
