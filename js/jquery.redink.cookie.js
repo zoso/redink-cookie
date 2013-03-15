@@ -125,12 +125,13 @@
                 }   
             }*/
             //console.log("addData: "+obj.data+" > data: "+data);
-            $.RedinkCookie.delete(function(s) {
+            /*$.RedinkCookie.delete(function(s) {
                 if (s) {
                     console.log("--- new cookie?");
-                    $.cookie(c_name, defaultSettings, options);
+                    
                 }
-            })
+            })*/
+            $.cookie(c_name, defaultSettings, options);
             
             state = true;
         }
@@ -142,12 +143,10 @@
         var state = false;
         if (obj.hasOwnProperty("data")) {
             var tmpArr = obj.data;
-
             for (var i = 0; i < tmpArr.length; i++) {
                 if (parseInt(nr) == i) {
                     tmpArr.splice(i,1);
                     console.log("----> removed: "+nr);
-                    //
                 }
             }
             defaultSettings = $.extend({}, defaultSettings, {data: tmpArr});
@@ -163,15 +162,17 @@
         if (obj.hasOwnProperty("data")) {
             var tmpArr = obj.data;
             tmpArr.move(old_index, new_index);
-            obj.data = tmpArr;
+            //obj.data = tmpArr;
             //$.cookie(c_name, defaultSettings, options);
+            defaultSettings = $.extend({}, defaultSettings, {data: tmpArr});
+            $.cookie(c_name, defaultSettings, options);
             state = true;
         }
         callback(state);
     }
 
     $.RedinkCookie.delete = function(callback) {
-        $.removeCookie(c_name, {}, options);
+        $.removeCookie(c_name, options);
         callback(true);
     }
 })(jQuery);
