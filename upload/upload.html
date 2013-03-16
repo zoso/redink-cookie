@@ -9,9 +9,6 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-
-       
-
         <style>
             #log {
                 position: absolute;
@@ -29,7 +26,7 @@
     </head>
     <body>
        <div id="wrapper">
-            <p>Test Redink Cookie</p>
+            <p>Upload</p>
             <ul id="menu">
                 <li><a href="#" data-func="check">Check cookie</a></li>
                 <li><a href="#" data-func="add">Add 10 random items to cookie</a></li>
@@ -38,16 +35,16 @@
             <div style="border-top: 1px solid #000">&nbsp;</div>
             <div id="my"></div>
             <div id="thelist"></div>
-            <div>Sjekk cookie på <a href="html/subpage.html">en annen side</a></div>
-            <div>Eller en <a href="upload/upload.html">annen side</a></div>
+            <div>Gå <a href="../index.html">tilbake</a></div>
+            <div>Gå <a href="../html/subpage.html">til subpage</a></div>
         </div>
         
         <div id="log"></div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <!-- jquery ui - for testing (sort) --> 
         <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
-        <script src="js/jquery.cookie.js"></script>
-        <script src="js/jquery.redink.cookie.js?v=1"></script>
+        <script src="../js/jquery.cookie.js"></script>
+        <script src="../js/jquery.redink.cookie.js?v=1"></script>
     </body>
     <script>
         $(document).ready(function() {
@@ -58,7 +55,7 @@
 
             //check if cookie exists
             var c = $.RedinkCookie.check();
-            console.log("index: "+c);
+            console.log("sub: "+c);
             if (c == undefined) {
                 //no cookie -> set new cookie
                 console.log("NO COOKIE");
@@ -77,7 +74,7 @@
                         break;
                     case "add":
                         for (var i = 0; i < 10; i++) {
-                            $.RedinkCookie.addData({title: "item"+i}, function(s) {
+                            $.RedinkCookie.addData({title: "item"+i, url: "url"+i}, function(s) {
                                 if (s) {
                                     console.log("Well done! data added");
                                 } else {
@@ -90,7 +87,6 @@
                         $.RedinkCookie.delete(function(s) {
                             if (s) {
                                 console.log("cookie deleted");
-                                $("#thelist").html('');
                             }
                         });
                         break;
@@ -102,11 +98,11 @@
             
             function createList() {
                 if ($("#thelist").children().length > 0) {
-                    console.log("remove children");
+                    console.log("wefwefw");
                     $("#thelist").html('');
                 }
                 var dataArr = $.RedinkCookie.getData();
-                console.log("index data: "+dataArr);
+                console.log("sub data: "+dataArr);
                 //loop through data array
                 for (var i = 0; i < dataArr.length; i++) {
                     //Demo: create list of items in data array
