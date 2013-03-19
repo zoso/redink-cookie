@@ -102,7 +102,7 @@
         callback(state);
     }
 
-    $.RedinkCookie.delete = function(callback) {
+    $.RedinkCookie.deleteCookie = function(callback) {
         $.removeCookie(c_name, options);
         callback(true);
     }
